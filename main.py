@@ -27,16 +27,17 @@ customtkinter.set_default_color_theme("blue")
 
 root = customtkinter.CTk()
 root.title("Sleeping Detector")
-root.geometry("900x600")
+root.geometry("525x325")
+root.resizable(False, False)
 
 title_label = customtkinter.CTkLabel(root, text="Sleeping detector", font=("Arial", 24, "bold"))
 title_label.pack(pady=10)
 
 video_label = customtkinter.CTkLabel(root, text="")
-video_label.pack()
+video_label.place(y=65, x = 200)
 
 status_label = customtkinter.CTkLabel(root, text="Is sleeping: No", font=("Arial", 18, "bold"))
-status_label.pack(pady=10)
+status_label.pack(pady=20, side = customtkinter.BOTTOM)
 
 # ========== EAR Calculation ==========
 def calculate_EAR(eye):
@@ -57,6 +58,7 @@ def detect():
         return
 
     frame = cv2.flip(frame, 1)
+    frame = cv2.resize(frame, (300, 250))
     h, w, _ = frame.shape
     rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
@@ -113,11 +115,14 @@ def exit_app():
     root.destroy()
 
 # ========== Buttons ==========
-start_button = customtkinter.CTkButton(root, text="Start Detecting", fg_color="green", command=start_detecting)
-start_button.pack(pady=5)
+start_button = customtkinter.CTkButton(root, text="Start Detecting", fg_color="#24E524", command=start_detecting,  hover_color="#10B510")
+# start_button.pack(pady=5)
+start_button.place(x = 15, y = 125)
 
-exit_button = customtkinter.CTkButton(root, text="Exit", fg_color="orangered", command=exit_app)
-exit_button.pack(pady=5)
+exit_button = customtkinter.CTkButton(root, text="Exit", fg_color="#FF5F33", command=exit_app, hover_color="#E54E24")
+# exit_button.pack(pady=5)
+exit_button.place(x = 15, y = 170)
+
 
 # ========== Run App ==========
 root.mainloop()
