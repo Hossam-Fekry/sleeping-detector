@@ -64,6 +64,8 @@ def detect():
 
     results = face_mesh.process(rgb)
     status_text = "No"
+    status_label.configure(text_color="black")
+
 
     if results.multi_face_landmarks:
         for face_landmarks in results.multi_face_landmarks:
@@ -89,6 +91,7 @@ def detect():
 
             if closed_eyes_counter >= CLOSED_FRAMES:
                 status_text = "Yes"
+                status_label.configure(text_color="red")
 
     status_label.configure(text=f"Is sleeping: {status_text}")
 
