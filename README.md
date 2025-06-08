@@ -31,14 +31,14 @@ python main.py
 ```
 
 ## File Structure
-[**main.py**](the main file with gui and has the last uptades and most of the time is working great)
+**main.py** : the main file with gui and has the last uptades and most of the time is working great
 
-[**testing.py**](a test file for testing the new features before add it to the main file)
+**testing.py** : a test file for testing the new features before add it to the main file
 
-[**logic.py**](a file without gui for just the camera using)
+**logic.py** : a file without gui for just the camera using
 
-[**README.md**](using markdown for the documentation)
+**README.md** : using markdown for the documentation
 
 ## Author
 
-[**Hossam Fekry**](https://github.com/Hossam-Fekry)
+**Hossam Fekry** : https://github.com/Hossam-Fekry
