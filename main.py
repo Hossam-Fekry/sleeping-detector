@@ -3,6 +3,8 @@ import math
 import customtkinter
 from PIL import Image, ImageTk
 import mediapipe as mp
+from playsound import playsound
+import threading
 
 # ========== Constants ==========
 LEFT_EYE = [33, 160, 158, 133, 153, 144]
@@ -14,6 +16,7 @@ CLOSED_FRAMES = 15
 cap = None
 closed_eyes_counter = 0
 running = False
+alert_played = False
 
 # ========== Mediapipe Setup ==========
 mp_face_mesh = mp.solutions.face_mesh
@@ -34,10 +37,10 @@ title_label = customtkinter.CTkLabel(root, text="Sleeping detector", font=("Aria
 title_label.pack(pady=10)
 
 video_label = customtkinter.CTkLabel(root, text="")
-video_label.place(y=65, x = 200)
+video_label.place(y=65, x=200)
 
 status_label = customtkinter.CTkLabel(root, text="Is sleeping: No", font=("Arial", 18, "bold"))
-status_label.pack(pady=20, side = customtkinter.BOTTOM)
+status_label.pack(pady=20, side=customtkinter.BOTTOM)
 
 # ========== EAR Calculation ==========
 def calculate_EAR(eye):
@@ -46,9 +49,13 @@ def calculate_EAR(eye):
     h = math.dist(eye[0], eye[3])
     return (v1 + v2) / (2.0 * h)
 
+# ========== Alert Sound Function ==========
+def play_alert_sound():
+    playsound("alert.mp3")
+
 # ========== Frame Detection Loop ==========
 def detect():
-    global closed_eyes_counter
+    global closed_eyes_counter, alert_played
 
     if not running:
         return
@@ -65,7 +72,6 @@ def detect():
     results = face_mesh.process(rgb)
     status_text = "No"
     status_label.configure(text_color="black")
-
 
     if results.multi_face_landmarks:
         for face_landmarks in results.multi_face_landmarks:
@@ -92,6 +98,11 @@ def detect():
             if closed_eyes_counter >= CLOSED_FRAMES:
                 status_text = "Yes"
                 status_label.configure(text_color="red")
+                if not alert_played:
+                    threading.Thread(target=play_alert_sound, daemon=True).start()
+                    alert_played = True
+            else:
+                alert_played = False
 
     status_label.configure(text=f"Is sleeping: {status_text}")
 
@@ -118,14 +129,11 @@ def exit_app():
     root.destroy()
 
 # ========== Buttons ==========
-start_button = customtkinter.CTkButton(root, text="Start Detecting", fg_color="#24E524", command=start_detecting,  hover_color="#10B510")
-# start_button.pack(pady=5)
-start_button.place(x = 15, y = 125)
+start_button = customtkinter.CTkButton(root, text="Start Detecting", fg_color="#24E524", command=start_detecting, hover_color="#10B510")
+start_button.place(x=15, y=125)
 
 exit_button = customtkinter.CTkButton(root, text="Exit", fg_color="#FF5F33", command=exit_app, hover_color="#E54E24")
-# exit_button.pack(pady=5)
-exit_button.place(x = 15, y = 170)
-
+exit_button.place(x=15, y=170)
 
 # ========== Run App ==========
 root.mainloop()
